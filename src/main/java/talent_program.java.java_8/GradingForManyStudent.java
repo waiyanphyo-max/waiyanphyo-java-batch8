@@ -1,6 +1,5 @@
 package main.java.talent_program.java.java_8;
 
-import java.util.Objects;
 import java.util.Scanner;
 
 public class GradingForManyStudent {
@@ -39,5 +38,7 @@ public class GradingForManyStudent {
             i++;
 
         } while (input.equalsIgnoreCase("Yes"));
+
+        sc.close();
     }
 }

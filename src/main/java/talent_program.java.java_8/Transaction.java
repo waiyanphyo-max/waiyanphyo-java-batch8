@@ -49,5 +49,7 @@ public class Transaction {
             }
 
         }while (choice < 4);
+
+        sc.close();
     }
 }

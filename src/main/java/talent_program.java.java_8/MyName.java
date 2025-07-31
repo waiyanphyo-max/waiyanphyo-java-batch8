@@ -1,7 +1,6 @@
 package main.java.talent_program.java.java_8;
 
 import java.util.Scanner;
-import java.util.ArrayList;
 
 public class MyName {
     public static void main(String[] args) {
@@ -14,5 +13,6 @@ public class MyName {
         for (int i=0; i<charArray.length; i++) {
             System.out.println(charArray[i]);
         }
+        sc.close();
     }
 }

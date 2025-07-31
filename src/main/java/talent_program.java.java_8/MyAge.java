@@ -8,5 +8,6 @@ public class MyAge {
         System.out.println("Enter your birth year");
         int dob = sc.nextInt();
         System.out.println("Your age is %s".formatted(2025 - dob));
+        sc.close();
     }
 }

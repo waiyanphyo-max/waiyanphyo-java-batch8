@@ -12,5 +12,6 @@ public class MySquareBlock {
         for (int i = 0; i<line_count; i++) {
             System.out.println(character.repeat(line_count*3));
         }
+        sc.close();
     }
 }

@@ -30,5 +30,6 @@ public class Grading {
         } else {
             System.out.println("You are Grade F");
         }
+        sc.close();
     }
 }

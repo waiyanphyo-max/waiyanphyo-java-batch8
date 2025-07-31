@@ -30,5 +30,6 @@ public class BMICalculationInBritish {
         } else {
             System.out.println("Your BMI is Obese");
         }
+        sc.close();
     }
 }

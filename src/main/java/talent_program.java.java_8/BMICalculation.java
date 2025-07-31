@@ -22,5 +22,6 @@ public class BMICalculation {
         } else {
             System.out.println("Your BMI is Obese");
         }
+        sc.close();
     }
 }

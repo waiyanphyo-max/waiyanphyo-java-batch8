@@ -13,5 +13,6 @@ public class SystemInput {
         int age = sc.nextInt();
         System.out.println("My name is %s and my age is %d".formatted(name, age));
 
+        sc.close();
     }
 }
