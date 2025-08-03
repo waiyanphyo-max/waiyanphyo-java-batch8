@@ -2,7 +2,6 @@ package main.java.talent_program.java.java_8;
 
 import java.math.BigInteger;
 import java.util.Scanner;
-
 public class FactorialOfNumbers_3_9 { // 3.9
     public static void main(String[] args) {
         System.out.println("Enter a number");
