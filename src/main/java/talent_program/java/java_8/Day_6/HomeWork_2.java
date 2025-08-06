@@ -11,12 +11,12 @@ public class HomeWork_2 {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         System.out.println("What do you want to do?");
-        System.out.println("If do you want to write Students' scores, please type 'input'");
-        System.out.println("If do you want to read Students' scores, please type 'output'");
+        System.out.println("If do you want to write Students' scores, please type 'input[i]'");
+        System.out.println("If do you want to read Students' scores, please type 'output[o]'");
         String answer = sc.nextLine();
 
         while (!Objects.equals(answer, "Exit")) {
-            if (Objects.equals(answer, "input")) {
+            if (Objects.equals(answer, "i")) {
                 studentScore();
                 System.out.println("If do you want to write Students' scores, please type 'input'");
                 System.out.println("If do you want to read Students' scores, please type 'output'");
@@ -36,7 +36,7 @@ public class HomeWork_2 {
             System.out.println("Example  : C:\\users");
             String input = sc.nextLine();
             String folder = input.replace("\\", "\\\\");
-            String textFile = folder + "\\grades.txt";
+            String textFile = folder + "\\grades"+".txt";
             File myFile = new File(textFile);
             if(myFile.createNewFile()) {
                 FileWriter myWriter = new FileWriter(textFile);
