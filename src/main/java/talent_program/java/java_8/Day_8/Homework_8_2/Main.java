@@ -15,6 +15,7 @@ public class Main {
 
         Printer<Double> doublePrinter = new Printer<>();
 
+        System.out.println(" ");
         System.out.println("Enter Double values to add.");
         System.out.println("Example : 1.11,3.33,4.33,5.02,6.40");
         Scanner scanner = new Scanner(System.in);
@@ -41,6 +42,7 @@ public class Main {
 
         Printer<Integer> integerPrinter = new Printer<>();
 
+        System.out.println(" ");
         System.out.println("Enter Integer values to add.");
         System.out.println("Example : 1,3,4,5,6");
         Scanner scanner = new Scanner(System.in);
