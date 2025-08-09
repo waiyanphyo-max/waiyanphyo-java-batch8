@@ -8,7 +8,7 @@ import java.time.LocalDate;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -16,13 +16,14 @@ public class Main {
     public static void main(String[] args) {
         final var transactions = new ArrayList<Transaction>();
 
+        System.out.println(" ");
         System.out.println("Do you already have an account.");
         System.out.println("Answer [Y]es or [N]o");
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
 
         if (Objects.equals(input, "Y")) {
-            getTransactions();
+            getTransactions(transactions);
         } else {
             initialBalance(transactions);
         }
@@ -81,9 +82,28 @@ public class Main {
 """);
                 }
                 myWriter.close();
+                System.out.println(" ");
                 System.out.println("File is written successfully");
             } else {
-                System.out.println("File already exists.");
+                    if (myFile.delete()) {
+                        myFile = new File(textFile);
+                        if (myFile.createNewFile()) {
+                            FileWriter myWriter = new FileWriter(textFile);
+                            for (Transaction transaction : transactions) {
+
+                                myWriter.write(STR."""
+\{String.valueOf(transaction)}
+""");
+                            }
+                            myWriter.close();
+                            System.out.println(" ");
+                            System.out.println("File is written successfully");
+                        } else {
+                            System.out.println("Something went wrong");
+                        }
+                    } else {
+                        System.out.println("Something went wrong");
+                    }
             }
         } catch (IOException e) {
             System.out.println("An error occurred");
@@ -95,11 +115,13 @@ public class Main {
         Transaction transaction = chooseTransaction(transactions);
         
         transactions.remove(transaction);
+        System.out.println(" ");
         System.out.printf("Transaction with id : %s is removed successfully.%n", transaction.getId());
     }
 
     private static Transaction chooseTransaction(ArrayList<Transaction> transactions) {
 
+        System.out.println(" ");
         System.out.println("Choose a transaction to remove");
         
         Transaction[] transactions1 = (transactions.toArray(new Transaction[0]));
@@ -131,14 +153,10 @@ public class Main {
     }
 
     private static void chooseWhatToDo() {
+        System.out.println(" ");
         System.out.println("What do you want to do? Choose :: ");
-        System.out.println("1. Add Expense");
-        System.out.println("2. Add Income");
-        System.out.println("3. View All Transactions");
-        System.out.println("4. View Total expense by Category");
-        System.out.println("5. View expense and income  Monthly Summary");
-        System.out.println("6. Remove Transaction");
-        System.out.println("0. Exit");
+        System.out.println("1. Add Expense, 2. Add Income, 3. View All Transactions, 4. View Total expense by Category");
+        System.out.println("5. View expense and income  Monthly Summary, 6. Remove Transaction, 0. Exit");
     }
 
     private static void viewMonthlySummary(ArrayList<Transaction> transactions) {
@@ -146,6 +164,7 @@ public class Main {
 
         for (Transaction transaction : transactions) {
             if (YearMonth.from(transaction.getTransDate()).equals(yearMonth)) {
+                System.out.println(" ");
                 System.out.println(transaction.toString());
             }
         }
@@ -163,18 +182,22 @@ public class Main {
             }
         }
 
+        System.out.println(" ");
         System.out.printf("Total expense of category %s is %s%n", category, result);
     }
 
     private static Category chooseCategory() {
         System.out.println("Choose Category you want to check expenses:");
         Category[] categories = Category.values();
-        System.out.println(Arrays.toString(Category.values()));
+        String categoriesNum = "";
         for (int i = 0; i < categories.length; i++) {
-            System.out.printf("%d. %s%n", i + 1, categories[i]);
+            if (i < categories.length - 1) {
+                categoriesNum = categoriesNum.concat("%s. %s, ".formatted(i+1, categories[i]));
+            } else if (i == categories.length - 1) {
+                categoriesNum = categoriesNum.concat("%s. %s".formatted(i+1, categories[i]));
+            }
         }
-        System.out.println(categories.length);
-
+        System.out.println(categoriesNum);
         Scanner scanner = new Scanner(System.in);
 
         while (true) {
@@ -203,6 +226,7 @@ public class Main {
     private static void viewAllTransactions(ArrayList<Transaction> transactions) {
         
         for (Transaction transaction : transactions) {
+            System.out.println(" ");
             System.out.println(transaction.toString()+"\n");
         }
     }
@@ -215,6 +239,7 @@ public class Main {
         inputAmount(transaction);
         inputDate(transaction);
         transactions.add(transaction);
+        System.out.println(" ");
         System.out.println("Transaction done successfully.");
     }
 
@@ -227,6 +252,7 @@ public class Main {
         inputAmount(transaction);
         inputDate(transaction);
         transactions.add(transaction);
+        System.out.println(" ");
         System.out.println("Transaction done successfully.");
 
     }
@@ -261,9 +287,16 @@ public class Main {
     private static void chooseCategory(Transaction transaction) {
         System.out.println("Choose a category");
         Category[] categories = Category.values();
+
+        String categoriesNum = "";
         for (int i = 0; i < categories.length; i++) {
-            System.out.printf("%s. %s%n", i+1, categories[i]);
+            if (i < categories.length - 1) {
+                categoriesNum = categoriesNum.concat("%s. %s, ".formatted(i+1, categories[i]));
+            } else if (i == categories.length - 1) {
+                categoriesNum = categoriesNum.concat("%s. %s".formatted(i+1, categories[i]));
+            }
         }
+        System.out.println(categoriesNum);
         Scanner scanner = new Scanner(System.in);
         int input = scanner.nextInt();
         try {
@@ -276,6 +309,7 @@ public class Main {
                 }
             }
         } catch (Exception e) {
+            System.out.println(" ");
             System.out.println("Please choose only from category list.");
         }
     }
@@ -295,23 +329,39 @@ public class Main {
         System.out.println(" ");
         System.out.printf("Your current balance is %s%n", amount);
     }
-    public static void getTransactions() {
+    public static void getTransactions(ArrayList<Transaction> transactions) {
         try {
             Scanner sc = new Scanner(System.in);
             System.out.println("Enter a file in that stored transactions.");
-            System.out.println("Example  : C:\\users\\text_file.txt");
+            System.out.println("Example  : C:\\users\\text_file");
             String input = sc.nextLine();
             String textFile = input.replace("\\", "\\\\");
-            File myFile = new File(textFile);
+            String lastFile = textFile.concat(".txt");
+            File myFile = new File(lastFile);
             Scanner myReader = new Scanner(myFile);
             while (myReader.hasNextLine()) {
+                Transaction transaction = new Transaction();
                 String result = myReader.nextLine();
-                System.out.println(result);
+                String result1 = result.substring(result.indexOf("{") + 1, result.lastIndexOf("}"));
+
+                String[] array = result1.split(", ");
+                HashMap<String, String> hashMap = new HashMap<>();
+                for (String string : array) {
+                    String[] keyValue = string.split("=");
+                    hashMap.put(keyValue[0], keyValue[1]);
+                }
+                transaction.setId(Long.parseLong(hashMap.get("id")));
+                transaction.setTransType(TransType.valueOf(hashMap.get("transType")));
+                transaction.setCategory(Category.valueOf(hashMap.get("category")));
+                transaction.setAmount(Double.parseDouble(hashMap.get("amount")));
+                transaction.setTransDate(LocalDate.parse(hashMap.get("transDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                transactions.add(transaction);
             }
             myReader.close();
         } catch (FileNotFoundException e) {
             System.out.println("Something went wrong");
         }
+
     }
 
 }
