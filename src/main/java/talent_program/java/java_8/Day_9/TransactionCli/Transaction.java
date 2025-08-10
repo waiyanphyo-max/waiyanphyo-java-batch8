@@ -1,8 +1,6 @@
-package main.java.talent_program.java.java_8.Day_9;
+package main.java.talent_program.java.java_8.Day_9.TransactionCli;
 
-import java.time.DateTimeException;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class Transaction {
     private long id = System.currentTimeMillis();

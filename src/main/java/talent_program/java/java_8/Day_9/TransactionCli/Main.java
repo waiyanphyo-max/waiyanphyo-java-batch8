@@ -1,4 +1,4 @@
-package main.java.talent_program.java.java_8.Day_9;
+package main.java.talent_program.java.java_8.Day_9.TransactionCli;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -329,6 +329,7 @@ public class Main {
         System.out.println(" ");
         System.out.printf("Your current balance is %s%n", amount);
     }
+
     public static void getTransactions(ArrayList<Transaction> transactions) {
         try {
             Scanner sc = new Scanner(System.in);
