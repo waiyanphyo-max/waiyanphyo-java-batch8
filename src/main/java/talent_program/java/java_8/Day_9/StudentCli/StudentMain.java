@@ -1,13 +1,10 @@
-package main.java.talent_program.java.java_8.StudentCli;
+package main.java.talent_program.java.java_8.Day_9.StudentCli;
 
 import main.java.talent_program.java.java_8.Day_9.TaskCli.Priority;
 import main.java.talent_program.java.java_8.Day_9.TaskCli.Status;
+import main.java.talent_program.java.java_8.Day_9.TaskCli.Task;
 
-import javax.imageio.ImageReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -24,7 +21,7 @@ public class StudentMain {
         String input = scanner.nextLine();
 
         if (Objects.equals(input, "Y")) {
-//            getListFromFile(studentList, studentGrades);
+            getListFromFile(studentList, studentGrades);
         } else {
             addStudents(studentList);
         }
@@ -37,6 +34,7 @@ public class StudentMain {
         Scanner scanner  = new Scanner(System.in);
 
         while (true) {
+            System.out.println(" ");
             System.out.println("1. Add Students, 2. Add Grade, 3. View Students' Grades");
             System.out.println(" 4. View Class Average, 5. View Top Student, 6. Search Student by Name, 0. Exit");
 
@@ -70,17 +68,22 @@ public class StudentMain {
             String folder = input.replace("\\", "\\\\");
             String textFile = STR."\{folder}.txt";
             File myFile = new File(textFile);
-            if(myFile.createNewFile()) {
+            if (myFile.createNewFile()) {
                 FileWriter myWriter = new FileWriter(textFile);
                 for (Student student : students) {
 
-                    myWriter.write(STR."""
-\{String.valueOf(student)}
-""");
+                    for (Map.Entry<Integer, Integer> entry : studentGrades.entrySet()) {
+                        if (student.getId() == entry.getKey()) {
+                            myWriter.write(STR."""
+                    Student{id=\{student.getId()}, name='\{student.getName()}', address='\{student.getAddress()}', grade=\{entry.getValue()}}
+                    """);
+                        }
+                    }
                 }
                 myWriter.close();
                 System.out.println(" ");
                 System.out.println("File is written successfully");
+                sc.close();
             } else {
                 if (myFile.delete()) {
                     myFile = new File(textFile);
@@ -91,8 +94,8 @@ public class StudentMain {
                             for (Map.Entry<Integer, Integer> entry : studentGrades.entrySet()) {
                                 if (student.getId() == entry.getKey()) {
                                     myWriter.write(STR."""
-\{String.valueOf(student)+ entry.getValue()}
-""");
+                    Student{id=\{student.getId()}, name='\{student.getName()}', address='\{student.getAddress()}', grade=\{entry.getValue()}}
+                    """);
                                 }
                             }
                         }
@@ -114,10 +117,12 @@ public class StudentMain {
 
     private static void searchStudentByName(ArrayList<Student> studentList) {
         Scanner scanner = new Scanner(System.in);
+        System.out.println(" ");
+        System.out.println("Enter name of Student.");
         String input = scanner.nextLine();
         for (Student student : studentList) {
             if (Objects.equals(input, student.getName())) {
-                System.out.println(student);
+                System.out.println(student.toString());
             }
         }
     }
@@ -139,7 +144,7 @@ public class StudentMain {
         }
 
         System.out.println(" ");
-        System.out.printf("Top student by mark in this is %s%n", name);
+        System.out.printf("Top student in this class is %s with %s marks.%n", name, maxMark);
     }
 
     private static void viewClassAverage(HashMap<Integer, Integer> studentGrades) {
@@ -173,18 +178,6 @@ public class StudentMain {
                 }
             }
         }
-
-//        for (int i = 0; i < studentList.size(); i++) {
-//            for (Map.Entry<Integer, Integer> entry : studentGrades.entrySet()) {
-//                String studentName = studentList.get(i).getName();
-//                int mark = entry.getValue();
-//                if (studentList.get(i).getId() < studentList.size()) {
-//                    System.out.printf("%s. %s%n,", studentList.get(i).getName(), mark);
-//                } else {
-//                    System.out.printf("%s. %s%n", studentName, mark);
-//                }
-//            }
-//        }
     }
 
 
@@ -249,40 +242,39 @@ public class StudentMain {
         return grades;
     }
 
-//    public static void getListFromFile(ArrayList<Student> students, HashMap<Integer, Integer> studentGrades) {
-//        try {
-//            Scanner sc = new Scanner(System.in);
-//            System.out.println("Enter a file in that stored students.");
-//            System.out.println("Example  : C:\\users\\text_file");
-//            String input = sc.nextLine();
-//            String textFile = input.replace("\\", "\\\\");
-//            String lastFile = textFile.concat(".txt");
-//            File myFile = new File(lastFile);
-//            Scanner myReader = new Scanner(myFile);
-//            while (myReader.hasNextLine()) {
-//                Student student = new Student();
-//                String result = myReader.nextLine();
-//                String result1 = result.substring(result.indexOf("{") + 1, result.lastIndexOf("}"));
-//
-//                String[] array = result1.split(", ");
-//                HashMap<String, String> hashMap = new HashMap<>();
-//                for (String string : array) {
-//                    String[] keyValue = string.split("=");
-//                    hashMap.put(keyValue[0], keyValue[1]);
-//                }
-//                task.setId(Long.parseLong(hashMap.get("id")));
-//                task.setDescription(hashMap.get("description"));
-//                task.setPriority(Priority.valueOf(hashMap.get("priority")));
-//                task.setStatus(Status.valueOf(hashMap.get("status")));
-//                task.setDeadLine(LocalDate.parse(hashMap.get("deadLine"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
-//                tasks.add(task);
-//            }
-//            myReader.close();
-//        } catch (FileNotFoundException e) {
-//            System.out.println("Something went wrong");
-//        }
-//
-//    }
+    public static void getListFromFile(ArrayList<Student> students, HashMap<Integer, Integer> studentsGrades) {
+        try {
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter a file in that stored students and their grades.");
+            System.out.println("Example  : C:\\users\\text_file");
+            String input = sc.nextLine();
+            String textFile = input.replace("\\", "\\\\");
+            String lastFile = textFile.concat(".txt");
+            File myFile = new File(lastFile);
+            Scanner myReader = new Scanner(myFile);
+            while (myReader.hasNextLine()) {
+                Student student = new Student();
+                String result = myReader.nextLine();
+                String result1 = result.substring(result.indexOf("{") + 1, result.lastIndexOf("}"));
+
+                String[] array = result1.split(", ");
+                HashMap<String, String> hashMap = new HashMap<>();
+                for (String string : array) {
+                    String[] keyValue = string.split("=");
+                    hashMap.put(keyValue[0], keyValue[1]);
+                }
+                student.setId(Integer.parseInt(hashMap.get("id")));
+                student.setName(hashMap.get("name"));
+                student.setAddress(hashMap.get("address"));
+                studentsGrades.put(student.getId(), Integer.parseInt(hashMap.get("grade")));
+                students.add(student);
+            }
+            myReader.close();
+        } catch (FileNotFoundException e) {
+            System.out.println("Something went wrong");
+        }
+
+    }
 
     private static void addStudents(ArrayList<Student> students) {
         Scanner scanner = new Scanner(System.in);

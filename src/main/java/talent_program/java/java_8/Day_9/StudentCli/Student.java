@@ -1,4 +1,4 @@
-package main.java.talent_program.java.java_8.StudentCli;
+package main.java.talent_program.java.java_8.Day_9.StudentCli;
 
 public class Student {
     private int id;
