@@ -1,19 +1,21 @@
-package main.java.talent_program.java.java_8.Day_9.TransactionCli;
+package main.java.talent_program.java.java_8.Day_10.TransWithDBOldVr;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.time.LocalDate;
+import java.sql.*;
+import java.time.LocalDateTime;
 import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 public class Main {
-    public static void main(String[] args) {
+    private static final String URL = "jdbc:mysql://localhost:3306/tpplearn";
+    private static final String USER = "root";
+    private static final String PASSWORD = "admin";
+
+    public static void main(String[] args) throws SQLException {
         final var transactions = new ArrayList<Transaction>();
 
         System.out.println(" ");
@@ -25,7 +27,7 @@ public class Main {
         if (Objects.equals(input, "Y")) {
             getTransactions(transactions);
         } else {
-            initialBalance(transactions);
+            initialBalance();
         }
 
         chooseWhatToDo();
@@ -275,10 +277,10 @@ public class Main {
             Scanner scanner = new Scanner(System.in);
             String input = scanner.nextLine();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-            LocalDate date = LocalDate.parse(input, formatter);
+            LocalDateTime date = LocalDateTime.parse(input, formatter);
             transaction.setTransDate(date);
         } catch (Exception e) {
-            System.out.println("try again.");
+            System.out.println("Try again.");
         }
 
     }
@@ -333,7 +335,7 @@ public class Main {
         }
     }
 
-    private static void initialBalance(ArrayList<Transaction> transactions) {
+    private static void initialBalance() throws SQLException {
 
         Transaction transaction = new Transaction();
 
@@ -343,10 +345,57 @@ public class Main {
         transaction.setTransType(TransType.income);
         transaction.setCategory(Category.salary);
         transaction.setAmount(amount);
-        inputDate(transaction);
-        transactions.add(transaction);
+        transaction.setTransDate(LocalDateTime.now());
+//        inputDate(transaction);
+        inputNote(transaction);
         System.out.println(" ");
         System.out.printf("Your current balance is %s%n", amount);
+
+        Connection connection = connectDb();
+        assert connection != null;
+        addTransaction(transaction, connection);
+
+    }
+
+    private static void inputNote(Transaction transaction) {
+        System.out.println("Enter a note for transaction.");
+        Scanner scanner = new Scanner(System.in);
+        String input = scanner.nextLine();
+        transaction.setNote(input);
+    }
+
+    private static void addTransaction(Transaction transaction, Connection connection) throws SQLException {
+
+        try {
+            String sql = "insert into transaction(tran_type, tran_category, amount, note, created_at) values (?, ?, ?, ?, ?)";
+            PreparedStatement prepStmt = connection.prepareStatement(sql);
+            prepStmt.setString(1, transaction.getTransType().toString());
+            prepStmt.setString(2, transaction.getCategory().toString());
+            prepStmt.setDouble(3, transaction.getAmount());
+            prepStmt.setString(4, transaction.getNote());
+            prepStmt.setTimestamp(5, Timestamp.valueOf(transaction.getTransDate()));
+
+            prepStmt.executeUpdate();
+            System.out.println("Transaction is added.");
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+
+    private static Connection connectDb() {
+        try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("MySQL JDBC Driver loaded.");
+
+            Connection connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Connected to the database.");
+            return connection;
+        } catch (ClassNotFoundException e) {
+            System.out.println("Could not load MySQL JDBC driver.");
+        } catch (SQLException e) {
+            System.out.println("Database connection failed.");
+        }
+        return null;
     }
 
     public static void getTransactions(ArrayList<Transaction> transactions) {
@@ -374,7 +423,7 @@ public class Main {
                 transaction.setTransType(TransType.valueOf(hashMap.get("transType")));
                 transaction.setCategory(Category.valueOf(hashMap.get("category")));
                 transaction.setAmount(Double.parseDouble(hashMap.get("amount")));
-                transaction.setTransDate(LocalDate.parse(hashMap.get("transDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
+                transaction.setTransDate(LocalDateTime.parse(hashMap.get("transDate"), DateTimeFormatter.ofPattern("yyyy-MM-dd")));
                 transactions.add(transaction);
             }
             myReader.close();

@@ -1,12 +1,6 @@
 package main.java.talent_program.java.java_8.Day_9.StudentCli;
 
-import main.java.talent_program.java.java_8.Day_9.TaskCli.Priority;
-import main.java.talent_program.java.java_8.Day_9.TaskCli.Status;
-import main.java.talent_program.java.java_8.Day_9.TaskCli.Task;
-
 import java.io.*;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 public class StudentMain {
